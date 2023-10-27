@@ -54,7 +54,7 @@ async def poll(channel: discord.TextChannel):
                 color=discord.Color.dark_blue(),
                 title=f"[{site}] {latest_article.title}",
                 description=latest_article.description,
-                url=Consts.ARTICLE_TPL.format(ID=get_guid(latest_article.guid))
+                url=Consts.ARTICLE_TPL.format(DOMAIN=site,ID=get_guid(latest_article.guid))
             )
 
             await channel.send(embed=embed)
