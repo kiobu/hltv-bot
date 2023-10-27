@@ -3,7 +3,7 @@ import asyncio
 
 import discord
 import feedparser
-from consts import Consts
+from consts import Consts, Site
 
 intents = discord.Intents.default()
 # intents.message_content = True
@@ -12,20 +12,25 @@ client = discord.Client(intents=intents)
 
 
 def get_guid(guid_str: str) -> int:
+    """ deprecated """
     return int(''.join(filter(str.isdigit, guid_str)))
 
 
-def get_last_article_guid() -> int:
-    with open('../last_article_guid.txt', 'r') as txt:
-        try:
-            return int(txt.readline())
-        except ValueError:
-            return 0
+def get_last_article_timestamp(site: Site) -> str:
+    try:
+        with open(f'../{site}_last_article_timestamp.txt', 'r') as txt:
+            try:
+                return txt.readline()
+            except ValueError:
+                return str(0)
+    except FileNotFoundError:
+        set_last_article_timestamp(site, "0")
+        return "0"
 
 
-def set_last_article_guid(guid: int):
-    with open('../last_article_guid.txt', 'w') as txt:
-        txt.write(str(guid))
+def set_last_article_timestamp(site: Site, ts: str):
+    with open(f'../{site}_last_article_timestamp.txt', 'w+') as txt:
+        txt.write(ts)
 
 
 def log(msg: str):
@@ -33,23 +38,29 @@ def log(msg: str):
 
 
 async def poll(channel: discord.TextChannel):
-    feed = feedparser.parse(Consts.RSS_FEED)
-    latest_article = feed.entries[0]
+    feeds = {
+        Site.HLTV: feedparser.parse(Consts.HLTV_RSS_FEED),
+        Site.DUST_2: feedparser.parse(Consts.D2_RSS_FEED)
+    }
 
-    if get_guid(latest_article.guid) > get_last_article_guid():
-        # new article, publish.
-        log("New article in RSS feed.")
+    for _i, site in enumerate(feeds):
+        latest_article = feeds[site].entries[0]
 
-        embed = discord.Embed(
-            title=latest_article.title,
-            description=latest_article.description,
-            url=Consts.ARTICLE_TPL.format(ID=get_guid(latest_article.guid))
-        )
+        if latest_article.published > get_last_article_timestamp(site):
+            # new article, publish.
+            log(f"New {site} article in RSS feed.")
 
-        await channel.send(embed=embed)
-        log("Embed created and sent to guild channel.")
+            embed = discord.Embed(
+                color=discord.Color.dark_blue(),
+                title=f"[{site}] {latest_article.title}",
+                description=latest_article.description,
+                url=Consts.ARTICLE_TPL.format(ID=get_guid(latest_article.guid))
+            )
 
-        set_last_article_guid(get_guid(latest_article.guid))
+            await channel.send(embed=embed)
+            log("Embed created and sent to guild channel.")
+
+            set_last_article_timestamp(site, latest_article.published)
 
 
 @client.event
