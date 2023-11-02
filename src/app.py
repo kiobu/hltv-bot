@@ -57,10 +57,18 @@ async def poll(channel: discord.TextChannel):
                 url=Consts.ARTICLE_TPL.format(DOMAIN=site,ID=get_guid(latest_article.guid))
             )
 
+            if Consts.DEBUG:
+                log(f"Article timestamp: {latest_article.published}")
+                log(f"Article title: {latest_article.title}")
+
             await channel.send(embed=embed)
             log("Embed created and sent to guild channel.")
 
             set_last_article_timestamp(site, latest_article.published)
+
+        else:
+            if Consts.DEBUG:
+                log(f"Polled, but latest article found is older or the same as current.\n--> Latest: {latest_article.published}\n--> Cached: {get_last_article_timestamp(site)}")
 
 
 @client.event
