@@ -10,6 +10,7 @@ python = "^3.10"
 feedparser = "^6.0.10"
 discord-py = "^2.3.2"
 discord = "^2.3.2"
+python-dateutil = "^2.8.2"
 
 
 [build-system]

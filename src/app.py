@@ -3,6 +3,7 @@ import asyncio
 
 import discord
 import feedparser
+from dateutil.parser import parse
 from consts import Consts, Site
 
 intents = discord.Intents.default()
@@ -46,7 +47,7 @@ async def poll(channel: discord.TextChannel):
     for _i, site in enumerate(feeds):
         latest_article = feeds[site].entries[0]
 
-        if latest_article.published > get_last_article_timestamp(site):
+        if parse(latest_article.published) > parse(get_last_article_timestamp(site)):
             # new article, publish.
             log(f"New {site} article in RSS feed.")
 
