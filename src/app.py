@@ -25,8 +25,8 @@ def get_last_article_timestamp(site: Site) -> str:
             except ValueError:
                 return str(0)
     except FileNotFoundError:
-        set_last_article_timestamp(site, "0")
-        return "0"
+        set_last_article_timestamp(site, "Mon, 1 Jan 1970 01:00:00 -0500")
+        return "Mon, 1 Jan 1970 01:00:00 -0500"
 
 
 def set_last_article_timestamp(site: Site, ts: str):
@@ -55,8 +55,14 @@ async def poll(channel: discord.TextChannel):
                 color=discord.Color.dark_blue(),
                 title=f"[{site}] {latest_article.title}",
                 description=latest_article.description,
-                url=Consts.ARTICLE_TPL.format(DOMAIN=site,ID=get_guid(latest_article.guid))
+                url=Consts.ARTICLE_TPL.format(DOMAIN=site, ID=get_guid(latest_article.guid))
             )
+
+            # attach image to embed if exists
+            try:
+                embed.set_image(url=latest_article['media_content'][0]['url'])
+            except KeyError:
+                pass
 
             if Consts.DEBUG:
                 log(f"Article timestamp: {latest_article.published}")
