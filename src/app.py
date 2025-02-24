@@ -41,7 +41,7 @@ def log(msg: str):
 async def poll(channel: discord.TextChannel):
     feeds = {
         Site.HLTV: feedparser.parse(Consts.HLTV_RSS_FEED),
-        Site.DUST_2: feedparser.parse(Consts.D2_RSS_FEED)
+        # Site.DUST_2: feedparser.parse(Consts.D2_RSS_FEED)
     }
 
     for _i, site in enumerate(feeds):
