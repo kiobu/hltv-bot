@@ -1,7 +1,7 @@
 import datetime
 import asyncio
+import re
 from typing import List
-from typing_extensions import deprecated
 
 import discord
 import feedparser
@@ -14,9 +14,8 @@ intents = discord.Intents.default()
 client = discord.Client(intents=intents)
 
 
-@deprecated
 def get_guid(guid_str: str) -> int:
-    return int(''.join(filter(str.isdigit, guid_str)))
+    return int(''.join(re.findall(r'\d+\.?\d*', guid_str)))
 
 
 def get_last_article_timestamp(site: Site) -> str:
