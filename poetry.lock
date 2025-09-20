@@ -146,6 +146,17 @@ files = [
 ]
 
 [[package]]
+name = "asyncio"
+version = "4.0.0"
+description = "Deprecated backport of asyncio; use the stdlib package instead"
+optional = false
+python-versions = ">=3.4"
+files = [
+    {file = "asyncio-4.0.0-py3-none-any.whl", hash = "sha256:c1eddb0659231837046809e68103969b2bef8b0400d59cfa6363f6b5ed8cc88b"},
+    {file = "asyncio-4.0.0.tar.gz", hash = "sha256:570cd9e50db83bc1629152d4d0b7558d6451bb1bfd5dfc2e935d96fc2f40329b"},
+]
+
+[[package]]
 name = "attrs"
 version = "25.3.0"
 description = "Classes Without Boilerplate"
@@ -795,4 +806,4 @@ propcache = ">=0.2.1"
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "2b356faca22e3e129e530a2927ce578cb56cf332c7a7ed33a3e37d40bfc71bd0"
+content-hash = "b3ba39417a60348e4f41e73157cef1deeb92630421f87cfc7595d6e978f8ee9f"
